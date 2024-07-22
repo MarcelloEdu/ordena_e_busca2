@@ -12,7 +12,8 @@ void getNome(char nome[]) {
 // a função a seguir deve retornar o seu número de GRR
 uint32_t getGRR() { return 20244350; }
 
-static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparacoes) {
+static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparacoes) 
+{
     int tam_esq = meio - inicio + 1; // Calcula o tamanho do subvetor esquerdo
     int tam_dir = fim - meio; // Calcula o tamanho do subvetor direito
 
@@ -115,13 +116,14 @@ int particionar(int vetor[], int inicio, int fim, uint64_t *numComp)
     return (i + 1); // retorna o índice onde o pivô está agora
 }
 
+
 void quicksort(int vetor[], int inicio, int fim, uint64_t *numComp) 
 {
     if (inicio < fim) 
     {
-        int meio = particionar(vetor, inicio, fim, numComp);
-        quicksort(vetor, inicio, meio - 1, numComp);
-        quicksort(vetor, meio + 1, fim, numComp);
+        int pi = particionar(vetor, inicio, fim, numComp);
+        quicksort(vetor, inicio, pi - 1, numComp);
+        quicksort(vetor, pi + 1, fim, numComp);
     }
 }
 
@@ -171,17 +173,136 @@ uint64_t heapSort(int vetor[], size_t tam)
     }
     return numComp;
 }
-uint64_t mergeSortSR(int vetor[], size_t tam) {
-    vetor[0] = 99;
-    return -1;
+
+uint64_t mergeSortSR(int vetor[], size_t tam) 
+{
+    int* inicio = (int*)malloc(tam * sizeof(int));
+        int* fim = (int*)malloc(tam * sizeof(int));
+        int topo = -1;
+        uint64_t numComp = 0;
+
+        // Empilhar o estado inicial (todo o array)
+        inicio[++topo] = 0;
+        fim[topo] = tam - 1;
+
+        while (topo >= 0) 
+        {
+            int i = inicio[topo];
+            int f = fim[topo];
+            topo--;
+
+            if (i < f) 
+            {
+                int m = i + (f - i) / 2;
+
+                // Empilhar estados para mesclar após dividir
+                inicio[++topo] = i;
+                fim[topo] = m;
+
+                inicio[++topo] = m + 1;
+                fim[topo] = f;
+
+                // Mesclar os subarrays divididos
+                merge(vetor, i, m, f, &numComp);
+            }
+        }
+
+        free(inicio);
+        free(fim);
+        return numComp;
 }
 
-uint64_t quickSortSR(int vetor[], size_t tam) {
-    vetor[0] = 99;
-    return -1;
+void quicksort_iterativo(int vetor[], int inicio, int fim, uint64_t *numComp) 
+{
+    // Cria a pilha
+    int* pilha = (int*)malloc((fim - inicio + 1) * sizeof(int));
+    int topo = -1;
+
+    // Empilha o estado inicial
+    pilha[++topo] = inicio;
+    pilha[++topo] = fim;
+
+    while (topo >= 0) 
+    {
+        // Desempilha o fim e o início
+        fim = pilha[topo--];
+        inicio = pilha[topo--];
+
+        // Particiona o vetor e obtém o índice do pivô
+        int pi = particionar(vetor, inicio, fim, numComp);
+
+        // Se houver elementos à esquerda do pivô, empilha esses índices
+        if (pi - 1 > inicio) 
+        {
+            pilha[++topo] = inicio;
+            pilha[++topo] = pi - 1;
+        }
+
+        // Se houver elementos à direita do pivô, empilha esses índices
+        if (pi + 1 < fim) 
+        {
+            pilha[++topo] = pi + 1;
+            pilha[++topo] = fim;
+        }
+    }
+
+    // Libera a memória da pilha
+    free(pilha);
 }
 
-uint64_t heapSortSR(int vetor[], size_t tam) {
-    vetor[0] = 99;
-    return -1;
+uint64_t quickSortSR(int vetor[], size_t tam) 
+{
+    uint64_t numComp = 0;
+    quicksort_iterativo(vetor, 0, tam - 1, &numComp);
+    return numComp;
+}
+
+void maxHeapifyIT(int vetor[], int tam, int no, uint64_t *numComp)
+{
+    while (no < tam)
+        {
+            int maior = no;
+            int esq = 2 * no + 1;
+            int dir = 2 * no + 2;
+
+        if (esq < tam && vetor[esq] > vetor[maior]) 
+        {
+            maior = esq;
+            (*numComp)++;
+        }
+
+        if (dir < tam && vetor[dir] > vetor[maior]) 
+        {
+            maior = dir;
+            (*numComp)++;
+        }
+
+        if (maior != no) 
+        {
+            trocar(&vetor[no], &vetor[maior]);
+            no = maior;
+        } 
+
+        else 
+        {
+            break;
+        }
+    }
+}
+
+uint64_t heapSortSR(int vetor[], size_t tam) 
+{
+    uint64_t numComp = 0;
+    for (int i = tam / 2 - 1; i >= 0; i--)
+        maxHeapifyIT(vetor, tam, i, &numComp);
+
+    // Extrai um a um os elementos do heap
+    for (int i = tam - 1; i > 0; i--) 
+    {
+        // Move a raiz atual para o fim
+        trocar(&vetor[0], &vetor[i]);
+        // Chama max heapify na heap reduzida
+        maxHeapifyIT(vetor, i, 0, &numComp);
+    }
+    return numComp;
 }

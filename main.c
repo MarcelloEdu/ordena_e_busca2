@@ -42,36 +42,36 @@ int main() {
 
     printf("\n=== Resultados da Ordenação ===\n");
 
-    printf("\nMerge Sort: ");
+    printf("\nMerge Sort: \n");
     numComp = mergeSort(vetor, tamVetor);
     printf("NumComp: %lu\n", numComp);
     if (verVetor) imprimirVetor(vetor, tamVetor);
 
-    printf("\nQuick Sort: ");
+    printf("\nQuick Sort: \n");
     numComp = quickSort(vetor, tamVetor);
     printf("NumComp: %lu\n", numComp);
     if (verVetor) imprimirVetor(vetor, tamVetor);
 
-    printf("\nHeap Sort: ");
+    printf("\nHeap Sort: \n");
     numComp = heapSort(vetor, tamVetor);
     printf("NumComp: %lu\n", numComp);
     if (verVetor) imprimirVetor(vetor, tamVetor);
-/*
-    printf("\nMerge Sort não Recursivo: ");
+
+    printf("\nMerge Sort iterativo: \n");
     numComp = mergeSortSR(vetor, tamVetor);
     printf("NumComp: %lu\n", numComp);
     if (verVetor) imprimirVetor(vetor, tamVetor);
 
-    printf("\nQuick Sort não Recursivo: ");
+    printf("\nQuick Sort iterativo: \n");
     numComp = quickSortSR(vetor, tamVetor);
     printf("NumComp: %lu\n", numComp);
     if (verVetor) imprimirVetor(vetor, tamVetor);
 
-    printf("\nHeap Sort não Recursivo: ");
+    printf("\nHeap Sort iterativo: \n");
     numComp = heapSortSR(vetor, tamVetor);
     printf("NumComp: %lu\n", numComp);
     if (verVetor) imprimirVetor(vetor, tamVetor);
-*/
+
     free(vetor);
 
     return 0;
