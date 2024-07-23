@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void getNome(char nome[]) {
+void getNome(char nome[]) 
+{
     // substitua por seu nome
     strncpy(nome, "Marcello Eduardo Pereira", MAX_CHAR);
     // adicionada terminação manual para caso de overflow
@@ -12,23 +13,13 @@ void getNome(char nome[]) {
 // a função a seguir deve retornar o seu número de GRR
 uint32_t getGRR() { return 20244350; }
 
-static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparacoes) 
+void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparacoes) 
 {
     int tam_esq = meio - inicio + 1; // Calcula o tamanho do subvetor esquerdo
     int tam_dir = fim - meio; // Calcula o tamanho do subvetor direito
 
-    // Aloca memória para os subvetores esquerdo e direito
-    int *esq = malloc(tam_esq * sizeof(int));
-    int *dir = malloc(tam_dir * sizeof(int));
-
-    // Verifica se a alocação de memória foi bem-sucedida
-    if (esq == NULL || dir == NULL) {
-        if (esq != NULL)
-            free(esq);
-        if (dir != NULL)
-            free(dir);
-        return;
-    }
+    int esq[tam_esq];
+    int dir[tam_dir];
 
     // Copia os elementos para os subvetores esquerdo e direito
     for (int i = 0; i < tam_esq; i++)
@@ -41,12 +32,15 @@ static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparac
     int k = inicio;
 
     // Mescla os subvetores ordenados
-    while (i < tam_esq && j < tam_dir) {
+    while (i < tam_esq && j < tam_dir) 
+    {
         (*comparacoes)++;
-        if (esq[i] <= dir[j]) {
+        if (esq[i] <= dir[j]) 
+        {
             vetor[k] = esq[i];
             i++;
-        } else {
+        } else 
+        {
             vetor[k] = dir[j];
             j++;
         }
@@ -54,22 +48,20 @@ static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparac
     }
 
     // Copia os elementos restantes do subvetor esquerdo, se houver
-    while (i < tam_esq) {
+    while (i < tam_esq) 
+    {
         vetor[k] = esq[i];
         i++;
         k++;
     }
 
     // Copia os elementos restantes do subvetor direito, se houver
-    while (j < tam_dir) {
+    while (j < tam_dir) 
+    {
         vetor[k] = dir[j];
         j++;
         k++;
     }
-
-    // Libera a memória alocada para os subvetores esquerdo e direito
-    free(esq);
-    free(dir);
 }
 
 uint64_t mergeSort(int vetor[], size_t tam) 
@@ -177,33 +169,33 @@ uint64_t heapSort(int vetor[], size_t tam)
 uint64_t mergeSortSR(int vetor[], size_t tam) 
 {
     int* inicio = (int*)malloc(tam * sizeof(int));
-        int* fim = (int*)malloc(tam * sizeof(int));
-        int topo = -1;
-        uint64_t numComp = 0;
+    int* fim = (int*)malloc(tam * sizeof(int));
+    int topo = -1;
+    uint64_t numComp = 0;
 
-        // Empilhar o estado inicial (todo o array)
-        inicio[++topo] = 0;
-        fim[topo] = tam - 1;
+    // Empilhar o estado inicial (todo o array)
+    inicio[++topo] = 0;
+    fim[topo] = tam - 1;
 
-        while (topo >= 0) 
+    while (topo >= 0) 
+    {
+        int i = inicio[topo];
+        int f = fim[topo];
+        topo--;
+
+        if (i < f) 
         {
-            int i = inicio[topo];
-            int f = fim[topo];
-            topo--;
+            int m = i + (f - i) / 2;
 
-            if (i < f) 
-            {
-                int m = i + (f - i) / 2;
+           // Empilhar estados para mesclar após dividir
+            inicio[++topo] = i;
+            fim[topo] = m;
 
-                // Empilhar estados para mesclar após dividir
-                inicio[++topo] = i;
-                fim[topo] = m;
+            inicio[++topo] = m + 1;
+            fim[topo] = f;
 
-                inicio[++topo] = m + 1;
-                fim[topo] = f;
-
-                // Mesclar os subarrays divididos
-                merge(vetor, i, m, f, &numComp);
+            // Mesclar os subarrays divididos
+            merge(vetor, i, m, f, &numComp);
             }
         }
 
