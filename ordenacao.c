@@ -2,7 +2,8 @@
 
 #include <string.h>
 
-void getNome(char nome[]) {
+void getNome(char nome[]) 
+{
     // substitua por seu nome
     strncpy(nome, "Marcello Eduardo Pereira", MAX_CHAR);
     // adicionada terminação manual para caso de overflow
@@ -12,7 +13,8 @@ void getNome(char nome[]) {
 // a função a seguir deve retornar o seu número de GRR
 uint32_t getGRR() { return 20244350; }
 
-static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparacoes) {
+static void merge(int vetor[], int inicio, int meio, int fim, uint64_t *comparacoes) 
+{
     int tam_esq = meio - inicio + 1; // Calcula o tamanho do subvetor esquerdo
     int tam_dir = fim - meio; // Calcula o tamanho do subvetor direito
 
